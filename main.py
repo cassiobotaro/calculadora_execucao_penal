@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from loguru import logger
+import logfire
 from pydantic_ai import Agent
 from rich.console import Console
 from rich.markdown import Markdown
@@ -14,7 +14,8 @@ agent = Agent(
 DIAS_POR_ANO = 365
 DIAS_POR_MES = 30
 
-logger.disable(__name__)
+logfire.configure(send_to_logfire="if-token-present")
+logfire.instrument_pydantic_ai()
 
 
 @agent.tool_plain
@@ -28,7 +29,6 @@ def converte_para_dias(anos: int, meses: int, dias: int) -> str:
     Returns:
         str: Total de dias.
     """
-    logger.info(f"Convertendo {anos} anos, {meses} meses e {dias} dias em dias.")
     if anos < 0 or meses < 0 or dias < 0:
         return "Por favor, informe um valor válido."
     return str(anos * DIAS_POR_ANO + meses * DIAS_POR_MES + dias)
@@ -43,7 +43,6 @@ def converte_dias_em_anos_meses_dias_por_extenso(dias: int) -> str:
     Returns:
         str: Anos, meses e dias por extenso.
     """
-    logger.info(f"Convertendo {dias} dias em anos, meses e dias por extenso.")
     if dias < 0:
         return "Por favor, informe um valor válido."
     anos = dias // DIAS_POR_ANO
@@ -74,7 +73,6 @@ def diferenca_entre_datas(data1: str, data2: str) -> str:
     Returns:
         str: Diferença em dias.
     """
-    logger.info(f"Calculando a diferença entre {data1} e {data2}.")
     try:
         d1 = datetime.strptime(data1, "%d-%m-%Y")
         d2 = datetime.strptime(data2, "%d-%m-%Y")
@@ -96,7 +94,6 @@ def soma_ou_subtrai_dias_em_data(data: str, operacao: str, dias: int) -> str:
     Returns:
         str: Nova data no formato 'DD-MM-YYYY'.
     """
-    logger.info(f"{operacao.capitalize()} {dias} dias de {data}.")
     try:
         d = datetime.strptime(data, "%d-%m-%Y")
         if operacao == "soma":
@@ -121,7 +118,6 @@ def calcula_fracao_e_porcentagem_baseado_em_dias(dias: int) -> str:
     Returns:
         str: Resultado com os valores calculados.
     """
-    logger.info(f"Calculando frações e porcentagens para {dias} dias.")
     if dias < 0:
         return "Por favor, informe um valor válido."
     fracao = {
