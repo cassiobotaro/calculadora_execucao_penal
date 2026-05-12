@@ -5,6 +5,6 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "pydantic-ai[logfire]>=1.89.1",
+    "pydantic-ai[logfire]>=1.93.0",
     "rich>=15.0.0",
 ]
